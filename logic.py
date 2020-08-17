@@ -48,28 +48,32 @@ class RequestsDb:
 
 class VkHandler(AbstractCannel):
     """ """
-    def __init__(self, db_channel_info: list):
+    def __init__(self, db_channel_info: tuple):
         self.db_channel_info = db_channel_info
 
     def write_uzer_db(self):
         """Writes the number of users to the database."""
         pass
 
+    def pars_url(self, url: str) -> str:
+        """ """
+        pass # TODO
 
 
 class Distributor:
     """ """
     def __itit__(self, db_channel_info: list):
         self.db_channel_info = db_channel_info
-        self.channal = {"VK": VkHandler}
+        # self.channal = {"VK": VkHandler}
 
     def channel_selection(self):
         """ """
         for one_record in self.db_channel_info:
             title = one_record[2]
-        #     if title == 'VK':
-            a = self.channal.get(title)      
-        return a
+            if title == 'VK':
+                inst = VkHandler(one_record)
+                inst
+           
 
 
 
