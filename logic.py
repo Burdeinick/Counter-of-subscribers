@@ -131,8 +131,8 @@ class Distributor:
 
 
 def main():
-    # a = RequestsDb().get_groups()
-    a = [(1, 'vk.com/rambler', 'VK')]
+    a = RequestsDb().get_groups()
+    # a = [(1, 'vk.com/rambler', 'VK')]
     b = Distributor(a)
     c = b.channel_handler()
     print(RequestsDb().TESTOVIY_ZAPROS())
