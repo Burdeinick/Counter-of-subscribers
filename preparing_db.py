@@ -64,7 +64,13 @@ def add_groups():
         with connect_db:
             request = """INSERT INTO groups(channal_id, url_groups)
                          VALUES(1, 'vk.com/rambler'),
-                                (1,'vk.com/ramblermail')
+                               (1,'vk.com/ramblermail'),
+                               (1, 'vk.com/horoscopesrambler'),
+                               (1, 'vk.com/championat'),
+                               (1, 'vk.com/championat.auto'),
+                               (1, 'vk.com/championat_cybersport'),
+                               (1, 'vk.com/livejournal'),
+                               (1, 'vk.com/afisha')
                       """
             connect_db.execute(request)
 

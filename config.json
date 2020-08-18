@@ -1,3 +1,5 @@
 {
-    "Data_Base": {"dbname": "new6.db"}
+    "Data_Base": {"dbname": "new11.db"},
+    "channel": {"VK": 
+                {"token": "d470286e91947afdc1208b5a540543fae4c2e1a784464993bb643ba74a95ac5a51788168454246d8e28ec"}}
 }
