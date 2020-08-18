@@ -51,7 +51,7 @@ class RequestsDb:
 
         try:
             request = f"""INSERTINTOsubscriber(groups_id, size, datetime)
-                            VALUES({db_gr_id}, {size_group}, CURRENT_DATE)
+                          VALUES({db_gr_id}, {size_group}, CURRENT_DATE)
                        """        
             self.connect_db.conn.execute(request)
             self.connect_db.conn.commit()
