@@ -20,7 +20,7 @@ class ConnectionDB:
 
     def get_config_db(self)-> tuple:
         """The method getting informations of configuration file."""
-        with open('config.json', 'r') as config:
+        with open ('Application/config.json') as config:
             json_str = config.read()
             json_str = json.loads(json_str)
         dbname = json_str['Data_Base']['dbname']
@@ -100,7 +100,7 @@ class VkHandler(AbstractCannel):
 
     def pars_json_token(self):
         """The method getting informations of from json. So far only the token."""
-        with open('config.json', 'r') as config:
+        with open('Application/config.json', 'r') as config:
             json_str = config.read()
             json_str = json.loads(json_str)
         self.vk_token = str(json_str['channel']['VK']['token'])

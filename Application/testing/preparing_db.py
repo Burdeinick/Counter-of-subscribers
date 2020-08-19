@@ -1,7 +1,7 @@
 import sqlite3
 import sys
-sys.path.insert(0, 'Application/scripts')
-from logic.logic import ConnectionDB
+sys.path.insert(0, 'Application')
+from scripts.logic.logic import ConnectionDB
 
 
 connect_db = ConnectionDB().conn
@@ -15,7 +15,7 @@ def foreign_keys_on():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{Error}.")
+        print(f"{error}.")
 
 
 def create_channal():
@@ -30,7 +30,7 @@ def create_channal():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{Error}.")
+        print(f"{error}.")
 
 
 def create_groups():
@@ -46,7 +46,7 @@ def create_groups():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{Error}.")
+        print(f"{error}.")
 
 def add_chanal():
     """ """
@@ -58,7 +58,7 @@ def add_chanal():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{Error}.")
+        print(f"{error}.")
 
 def add_groups():
     """ """
@@ -77,7 +77,7 @@ def add_groups():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{Error}.")
+        print(f"{error}.")
 
 def create_subscriber():
     """ """
@@ -93,7 +93,7 @@ def create_subscriber():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{Error}.")
+        print(f"{error}.")
 
 
 def main():

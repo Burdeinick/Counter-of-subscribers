@@ -1,7 +1,7 @@
 import sqlite3
 import sys
-sys.path.insert(0, 'Application/scripts')
-from logic.logic import ConnectionDB
+sys.path.insert(0, 'Application')
+from scripts.logic.logic import ConnectionDB
 
 
 connect_db = ConnectionDB().conn
@@ -15,7 +15,7 @@ def drop_channal():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{Error}.")
+        print(f"{error}.")
 
 def drop_groups():
     """Request to drop the 'groups' table."""
@@ -25,7 +25,7 @@ def drop_groups():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{Error}.")
+        print(f"{error}.")
 
 def drop_subscriber():
     """Request to drop the 'subscriber' table."""
@@ -35,7 +35,7 @@ def drop_subscriber():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{Error}.")
+        print(f"{error}.")
 
 
 def main():

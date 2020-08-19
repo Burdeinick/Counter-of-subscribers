@@ -3,3 +3,6 @@ build :
 
 droptables :
 	python3 Application/testing/drop_tables.py
+
+run :
+	python3 scheduleCron.py
