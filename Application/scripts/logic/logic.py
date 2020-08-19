@@ -55,6 +55,7 @@ class RequestsDb:
         """This request fills the database with the collected information."""
         db_gr_id = info[0]
         size_group = info[1]
+    
         try:
             request = f"""INSERT INTO subscriber(groups_id, size, datetime)
                           VALUES({db_gr_id}, {size_group}, CURRENT_DATE)
@@ -84,7 +85,7 @@ class VkHandler(AbstractCannel):
     """
     def __init__(self, one_channel_info: tuple):
         self.one_channel_info = one_channel_info
-        self.db_gr_id = self.one_channel_info[0]
+        self.db_gr_id = int(self.one_channel_info[0])
         self.id_group_request = None
         self.size_group = None
         self.vk_token = None
@@ -94,7 +95,7 @@ class VkHandler(AbstractCannel):
         It leaves the part that will be used in the API request in field 'group_id'.
 
         """
-        url = self.one_channel_info[1]
+        url = str(self.one_channel_info[1])
         self.id_group_request = url.split('/')[-1]
 
     def pars_json_token(self):
@@ -102,7 +103,7 @@ class VkHandler(AbstractCannel):
         with open('config.json', 'r') as config:
             json_str = config.read()
             json_str = json.loads(json_str)
-        self.vk_token = json_str['channel']['VK']['token']
+        self.vk_token = str(json_str['channel']['VK']['token'])
 
     def get_size_group(self) -> tuple:
         """This method fixate number of community members."""
@@ -135,7 +136,7 @@ class Distributor:
 
         """
         for one_record in self.db_channel_info:
-            title = one_record[2]
+            title = str(one_record[2])
             try:
                 objhand = self.channal.get(title)(one_record)
             except TypeError as error:
