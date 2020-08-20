@@ -26,7 +26,6 @@ class AddGroup:
         response = requests.get(URL)
         try:
             if response.json()['error']:
-                print('это ерор')
                 return False
         except KeyError:
             return True
@@ -37,7 +36,6 @@ class AddGroup:
             inp_url_group = input("Please enter the 'URL' of the 'VK' group: ")
             last_part = self.last_part_url(inp_url_group)
             pars_gr = self.parser_group(str(last_part))
-            print('!!!', pars_gr)
             if pars_gr:
                 resp_add_new_gr = self.request_db.add_new_group(inp_url_group)
                 if resp_add_new_gr:

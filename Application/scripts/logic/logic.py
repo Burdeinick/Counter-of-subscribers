@@ -44,13 +44,15 @@ class RequestsDb:
         """
         try:
             request = """SELECT groups_id, url_groups, title
-                         FROM channal JOIN groups USING(channal_id)
+                         FROM channel JOIN groups USING(channel_id)
                       """        
             self.connect_db.cursor.execute(request)
             return self.connect_db.cursor.fetchall()
 
-        except Exception as exept: 
-            return (f"{exept}")
+        except Exception as error:
+            print(f"{error}.")
+            raise MemoryError("""This error in the 'logic.py' file 
+                                  in the 'get_groups' method, the class RequestsDb.""")
     
     def write_to_subscribe(self, info: tuple):
         """This request fills the database with the collected information."""
@@ -64,13 +66,16 @@ class RequestsDb:
             self.connect_db.conn.execute(request)
             self.connect_db.conn.commit()
         except Exception as error:
-            raise MyError(f'{error}')
+            print(f"{error}.")
+            raise MyError("""This error in the 'logic.py' file 
+                              in the 'write_to_subscribe' method, the class RequestsDb.""")
 
     def add_new_group(self, new_group:str) -> bool:
-        # group = new_group.split('/')[-1]
-        """ """
+        """This method makes a query in the database by adding a new group.
+           'channel_id' = 1 because the channel('VK') in the table 'channel' = 1
+        """
         try:
-            request = f"""INSERT INTO groups(url_groups, channal_id)
+            request = f"""INSERT INTO groups(url_groups, channel_id)
                           VALUES('{new_group}', 1)
                        """        
             self.connect_db.conn.execute(request)
@@ -104,7 +109,6 @@ class VkHandler(AbstractCannel):
     """
     def __init__(self, one_channel_info: tuple):
         self.connect = ConnectionDB()
-
         self.one_channel_info = one_channel_info
         self.db_gr_id = int(self.one_channel_info[0])
         self.id_group_request = None
@@ -116,26 +120,22 @@ class VkHandler(AbstractCannel):
         It leaves the part that will be used in the API request in field 'group_id'.
 
         """
-
         url = str(self.one_channel_info[1])
         print('Я в парсе 1', url)
         self.id_group_request = url.split('/')[-1]
-
         print('Я в парсе 2', self.id_group_request)
 
     def get_size_group(self) -> tuple:
         """This method fixate number of community members."""
         URL = f"https://api.vk.com/method/groups.getMembers?group_id={self.id_group_request}&v=5.122&offset=100&count=10&access_token={self.vk_token}"
         response = requests.get(URL)
-
         try:
             time.sleep(1)
             self.size_group = response.json()['response']['count']
-        except KeyError as error:
-            print(f"""{error}. You probably have an error in the request. The value of the {self.id_group_request} group is not entered in the database.""")
-
         except Exception as error:
-            print(f"""{error}. You probably have an error in the request. The value of the {self.id_group_request} group is not entered in the database.""")
+            print(f"""{error}. You probably have an error in the request.
+                               The value of the {self.id_group_request} group is not entered in the database.
+                               This error  in the 'logic.py' file in the 'get_size_group' method, the class 'VkHandler'.""")
 
     def picking_info(self) -> tuple:
         """This method returns a tuple that
@@ -146,10 +146,10 @@ class VkHandler(AbstractCannel):
 
 
 class Distributor:
-    """Channel handler class."""
+    """The channel handler class."""
     def __init__(self, db_channel_info: list):
         self.db_channel_info = db_channel_info
-        self.channal = {"VK": VkHandler}
+        self.channel = {"VK": VkHandler}
 
     def channel_handler(self):
         """According to which channel to process,
@@ -159,20 +159,17 @@ class Distributor:
         for one_record in self.db_channel_info:
             title = str(one_record[2])
             try:
-                objhand = self.channal.get(title)(one_record)
-            except TypeError as error:
-                raise MyError(f"{error}, unfortunately, the functionality for processing the '{title}' channel has not yet been developed.")
+                objhand = self.channel.get(title)(one_record)
+            except TypeError:
+                raise MyError(f"""Unfortunately, the functionality for processing the '{title}'
+                                  channel has not yet been developed.""")
 
-            try:
-                objhand.pars_url()
-            except Exception as error:
-                raise MyError(f"")
-
+            objhand.pars_url()
             objhand.get_size_group()
             to_subscr = objhand.picking_info()
 
             try:
                 RequestsDb().write_to_subscribe(to_subscr)
             except Exception as error:
-                print(f"""{error}. """)
-
+                print(f"""{error}.This error in the 'logic.py' file 
+                                  in the 'channel_handler' method, the class 'Distributor'.""")
