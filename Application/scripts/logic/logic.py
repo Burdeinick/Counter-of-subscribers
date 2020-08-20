@@ -67,6 +67,7 @@ class RequestsDb:
             raise MyError(f'{error}')
 
     def add_new_group(self, new_group:str) -> bool:
+        # group = new_group.split('/')[-1]
         """ """
         try:
             request = f"""INSERT INTO groups(url_groups, channal_id)
@@ -77,9 +78,9 @@ class RequestsDb:
             return True
 
         except Exception as error:
-            print(f"The new group is not added, {error}. A group with this 'URL' \
-                    probably already exists. \
-                    This error  in the 'logic.py' file in the 'add_new_group method.")
+            print(f"""The new group is not added, {error}. A group with this 'URL'
+                      probably already exists. This error  in the 'logic.py' file 
+                      in the 'add_new_group method.""")
             return False
 
 
@@ -119,19 +120,22 @@ class VkHandler(AbstractCannel):
         url = str(self.one_channel_info[1])
         print('Я в парсе 1', url)
         self.id_group_request = url.split('/')[-1]
+
         print('Я в парсе 2', self.id_group_request)
 
     def get_size_group(self) -> tuple:
         """This method fixate number of community members."""
         URL = f"https://api.vk.com/method/groups.getMembers?group_id={self.id_group_request}&v=5.122&offset=100&count=10&access_token={self.vk_token}"
         response = requests.get(URL)
+
         try:
             time.sleep(1)
             self.size_group = response.json()['response']['count']
-        except KeyError:
-            raise MyError('You probably have an error in the request. Please check group_id and access_token.')
+        except KeyError as error:
+            print(f"""{error}. You probably have an error in the request. The value of the {self.id_group_request} group is not entered in the database.""")
+
         except Exception as error:
-            raise MyError("This error  in the 'logic.py' file in the 'get_size_group' method.")
+            print(f"""{error}. You probably have an error in the request. The value of the {self.id_group_request} group is not entered in the database.""")
 
     def picking_info(self) -> tuple:
         """This method returns a tuple that
@@ -162,7 +166,7 @@ class Distributor:
             try:
                 objhand.pars_url()
             except Exception as error:
-                raise MyError(f"{error}.")
+                raise MyError(f"")
 
             objhand.get_size_group()
             to_subscr = objhand.picking_info()
@@ -170,4 +174,5 @@ class Distributor:
             try:
                 RequestsDb().write_to_subscribe(to_subscr)
             except Exception as error:
-                raise MyError(f"{error}. This error raise in 'RequestsDb' class in the method 'write_to_subscribe'.")
+                print(f"""{error}. """)
+
