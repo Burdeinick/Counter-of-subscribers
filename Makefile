@@ -6,3 +6,6 @@ droptables :
 
 run :
 	python3 Application/main.py
+
+addgroup :
+	python3 Application/scripts/logic/add_new_group.py

@@ -41,7 +41,8 @@ def create_groups():
                          groups_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                          url_groups TEXT NOT NULL,
                          channal_id INTEGER NOT NULL,
-                         FOREIGN KEY (channal_id) REFERENCES channal(channal_id) ON DELETE CASCADE
+                         FOREIGN KEY (channal_id) REFERENCES channal(channal_id) ON DELETE CASCADE,
+                         UNIQUE(url_groups)
                          )"""
             connect_db.execute(request)
 

@@ -1,10 +1,11 @@
 import json
 import sqlite3
 import requests
+import time 
 from scripts.logic.abstract_for_channel import AbstractCannel
 
 
-class My_error(Exception):
+class MyError(Exception):
     """For raise any errors.
     When raising errors, a description of the errors that occurred will be added.
 
@@ -23,8 +24,9 @@ class ConnectionDB:
         with open ('Application/config.json') as config:
             json_str = config.read()
             json_str = json.loads(json_str)
-        dbname = json_str['Data_Base']['dbname']
-        return (dbname, )
+        dbname = str(json_str['Data_Base']['dbname'])
+        vktok = str(json_str['channel']['VK']['token'])
+        return (dbname, vktok)
 
 
 class RequestsDb:
@@ -43,7 +45,6 @@ class RequestsDb:
         try:
             request = """SELECT groups_id, url_groups, title
                          FROM channal JOIN groups USING(channal_id)
-                         ORDER BY groups_id
                       """        
             self.connect_db.cursor.execute(request)
             return self.connect_db.cursor.fetchall()
@@ -63,7 +64,24 @@ class RequestsDb:
             self.connect_db.conn.execute(request)
             self.connect_db.conn.commit()
         except Exception as error:
-            raise My_error(f'{error}')
+            raise MyError(f'{error}')
+
+    def add_new_group(self, new_group:str) -> bool:
+        """ """
+        try:
+            request = f"""INSERT INTO groups(url_groups, channal_id)
+                          VALUES('{new_group}', 1)
+                       """        
+            self.connect_db.conn.execute(request)
+            self.connect_db.conn.commit()
+            return True
+
+        except Exception as error:
+            print(f"The new group is not added, {error}. A group with this 'URL' \
+                    probably already exists. \
+                    This error  in the 'logic.py' file in the 'add_new_group method.")
+            return False
+
 
 #################################################################################################
 # УДАЛИТЬ ПЕРЕД РЕЛИЗОМ!
@@ -84,37 +102,36 @@ class VkHandler(AbstractCannel):
 
     """
     def __init__(self, one_channel_info: tuple):
+        self.connect = ConnectionDB()
+
         self.one_channel_info = one_channel_info
         self.db_gr_id = int(self.one_channel_info[0])
         self.id_group_request = None
         self.size_group = None
-        self.vk_token = None
+        self.vk_token = self.connect.get_config_db()[1]
         
     def pars_url(self):
         """The method splitting string URL.
         It leaves the part that will be used in the API request in field 'group_id'.
 
         """
-        url = str(self.one_channel_info[1])
-        self.id_group_request = url.split('/')[-1]
 
-    def pars_json_token(self):
-        """The method getting informations of from json. So far only the token."""
-        with open('Application/config.json', 'r') as config:
-            json_str = config.read()
-            json_str = json.loads(json_str)
-        self.vk_token = str(json_str['channel']['VK']['token'])
+        url = str(self.one_channel_info[1])
+        print('Я в парсе 1', url)
+        self.id_group_request = url.split('/')[-1]
+        print('Я в парсе 2', self.id_group_request)
 
     def get_size_group(self) -> tuple:
         """This method fixate number of community members."""
         URL = f"https://api.vk.com/method/groups.getMembers?group_id={self.id_group_request}&v=5.122&offset=100&count=10&access_token={self.vk_token}"
         response = requests.get(URL)
         try:
+            time.sleep(1)
             self.size_group = response.json()['response']['count']
         except KeyError:
-            raise My_error('You probably have an error in the request. Please check group_id and access_token.')
+            raise MyError('You probably have an error in the request. Please check group_id and access_token.')
         except Exception as error:
-            raise My_error(f"{error}")
+            raise MyError("This error  in the 'logic.py' file in the 'get_size_group' method.")
 
     def picking_info(self) -> tuple:
         """This method returns a tuple that
@@ -140,18 +157,17 @@ class Distributor:
             try:
                 objhand = self.channal.get(title)(one_record)
             except TypeError as error:
-                raise My_error(f"{error}, unfortunately, the functionality for processing the '{title}' channel has not yet been developed.")
+                raise MyError(f"{error}, unfortunately, the functionality for processing the '{title}' channel has not yet been developed.")
 
             try:
                 objhand.pars_url()
             except Exception as error:
-                raise My_error(f"{error}.")
+                raise MyError(f"{error}.")
 
-            objhand.pars_json_token()
             objhand.get_size_group()
             to_subscr = objhand.picking_info()
 
             try:
                 RequestsDb().write_to_subscribe(to_subscr)
             except Exception as error:
-                raise My_error(f"{error}. This error raise in 'RequestsDb' class in the method 'write_to_subscribe'.")
+                raise MyError(f"{error}. This error raise in 'RequestsDb' class in the method 'write_to_subscribe'.")
