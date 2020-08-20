@@ -10,8 +10,11 @@ def main():
     c = b.channel_handler()
     print(RequestsDb().TESTOVIY_ZAPROS())
         
+
 # def main():
-#     schedule.every().minute.at(":17").do(job)
+#     # schedule.every().minute.at(":17").do(job)
+#     schedule.
+
 #     while True:
 #         schedule.run_pending()
 #         time.sleep(1)
