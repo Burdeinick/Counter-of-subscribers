@@ -1,8 +1,28 @@
 import json
 import sqlite3
+import logging
 import requests
 import time 
 from scripts.logic.abstract_for_channel import AbstractCannel
+
+
+
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+
+
+def setup_logger(name, log_file, level=logging.ERROR):
+    """The logger file 'logic.py'"""
+    handler = logging.FileHandler(log_file)        
+    handler.setFormatter(formatter)
+
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+
+    return logger
+
+
+super_logger = setup_logger('logger', 'logfile.log')
 
 
 class ConnectionDB:
@@ -42,10 +62,8 @@ class RequestsDb:
             self.connect_db.cursor.execute(request)
             return self.connect_db.cursor.fetchall()
 
-        except Exception as error:
-            print(f"{error}.")
-            raise MemoryError("""This error in the 'logic.py' file 
-                                  in the 'get_groups' method, the class RequestsDb.""")
+        except Exception:
+            super_logger.error('Error', exc_info=True)
     
     def write_to_subscribe(self, info: tuple):
         """This request fills the database with the collected information."""
@@ -59,9 +77,8 @@ class RequestsDb:
             self.connect_db.conn.execute(request)
             self.connect_db.conn.commit()
 
-        except Exception as error:
-            print("""{error}. This error in the 'logic.py' file 
-                              in the 'write_to_subscribe' method, the class RequestsDb.""")
+        except Exception:
+            super_logger.error('Error', exc_info=True)
 
     def add_new_group(self, new_group:str) -> bool:
         """This method makes a query in the database by adding a new group.
@@ -75,10 +92,8 @@ class RequestsDb:
             self.connect_db.conn.commit()
             return True
 
-        except Exception as error:
-            print(f"""The new group is not added, {error}. A group with this 'URL'
-                      probably already exists. This error  in the 'logic.py' file 
-                      in the 'add_new_group method.""")
+        except Exception:
+            super_logger.error('Error', exc_info=True)
             return False
 
 
@@ -93,7 +108,8 @@ class RequestsDb:
             return self.connect_db.cursor.fetchall()
 
         except Exception as error: 
-            return (f"{error}")
+            super_logger.error('Error', exc_info=True)
+            return (f"{error}. I couldn't get the data.")
 #################################################################################################
 
 class VkHandler(AbstractCannel):
@@ -118,11 +134,8 @@ class VkHandler(AbstractCannel):
             url = str(self.one_channel_info[1])
             self.id_group_request = url.split('/')[-1]
             print('Я в парсе', self.id_group_request)
-        except Exception as error:
-            print(f"""The new group is not added, {error}. A group with this 'URL'
-                      probably already exists. This error  in the 'logic.py' file 
-                      in the 'pars_url' method.""")
-
+        except Exception:
+            super_logger.error('Error', exc_info=True)
 
 
     def get_size_group(self) -> tuple:
@@ -132,10 +145,8 @@ class VkHandler(AbstractCannel):
         try:
             time.sleep(1)
             self.size_group = response.json()['response']['count']
-        except Exception as error:
-            print(f"""{error}. You probably have an error in the request.
-                               The value of the {self.id_group_request} group is not entered in the database.
-                               This error  in the 'logic.py' file in the 'get_size_group' method, the class 'VkHandler'.""")
+        except Exception:
+            super_logger.error('Error', exc_info=True)
 
     def picking_info(self) -> tuple:
         """This method returns a tuple that
@@ -160,40 +171,23 @@ class Distributor:
             title = str(one_record[2])
             try:
                 objhand = self.channel.get(title)(one_record)
-            except TypeError as error:
-                print(f"""{error}. Unfortunately, the functionality for processing the '{title}'
-                          channel has not yet been developed.""")
+            except Exception:
+                super_logger.error('Error', exc_info=True)
 
             try:
                 objhand.pars_url()
-            except Exception as error:
-                print(f"""{error}.This error in the 'logic.py' file 
-                                  in the 'channel_handler' method,
-                                  the class 'Distributor'. Probably 
-                                  a problem with the 
-                                  'objhand.pars_url()'""")
+            except Exception:
+                super_logger.error('Error', exc_info=True)
             try:
                 objhand.get_size_group()
-            except Exception as error:
-                print(f"""{error}.This error in the 'logic.py' file 
-                                  in the 'channel_handler' method,
-                                  the class 'Distributor'. Probably 
-                                  a problem with the 
-                                  'objhand.get_size_group()'""")
+            except Exception:
+                super_logger.error('Error', exc_info=True)
             try:
                 to_subscr = objhand.picking_info()
-            except Exception as error:
-                print(f"""{error}.This error in the 'logic.py' file 
-                                  in the 'channel_handler' method,
-                                  the class 'Distributor'. Probably 
-                                  a problem with the 
-                                  to_subscr = objhand.picking_info()'""")
+            except Exception:
+                super_logger.error('Error', exc_info=True)
 
             try:
                 RequestsDb().write_to_subscribe(to_subscr)
-            except Exception as error:
-                print(f"""{error}.This error in the 'logic.py' file 
-                                  in the 'channel_handler' method,
-                                  the class 'Distributor'. Probably 
-                                  a problem with the 
-                                  'RequestsDb().write_to_subscribe(to_subscr)'""")
+            except Exception:
+                super_logger.error('Error', exc_info=True)

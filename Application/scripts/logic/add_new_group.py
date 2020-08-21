@@ -15,7 +15,7 @@ class AddGroup:
 
     def last_part_url(self, url: str) -> str:
         """This method leaves only "group_id" for checking."""
-        return url.split('/')[-1]
+        return str(str(url).split('/')[-1])
 
 
     def request_id_group(self, url_group: str) -> bool:
@@ -50,4 +50,5 @@ def main():
     check = add.enter_new_group()
 
 
-main()
+if __name__ == "__main__":
+    main()
