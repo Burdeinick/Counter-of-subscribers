@@ -9,7 +9,8 @@ def job():
     select_hand = Distributor(req_grop)
     final_action = select_hand.channel_handler()
 
-    print(RequestsDb().TESTOVIY_ZAPROS())
+    for one_tup in RequestsDb().TESTOVIY_ZAPROS():
+        print(one_tup)
         
 
 def main():

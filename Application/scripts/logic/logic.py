@@ -5,13 +5,6 @@ import time
 from scripts.logic.abstract_for_channel import AbstractCannel
 
 
-class MyError(Exception):
-    """For raise any errors.
-    When raising errors, a description of the errors that occurred will be added.
-
-    """
-    pass
-
 class ConnectionDB:
     """Class for connect to DB."""
     def __init__(self):
@@ -66,8 +59,7 @@ class RequestsDb:
             self.connect_db.conn.execute(request)
             self.connect_db.conn.commit()
         except Exception as error:
-            print(f"{error}.")
-            raise MyError("""This error in the 'logic.py' file 
+            print("""{error}. This error in the 'logic.py' file 
                               in the 'write_to_subscribe' method, the class RequestsDb.""")
 
     def add_new_group(self, new_group:str) -> bool:
@@ -94,12 +86,14 @@ class RequestsDb:
 
     def TESTOVIY_ZAPROS(self):
         try:
-            request = f"""SELECT * FROM subscriber"""        
+            request = f"""SELECT subscriber_id, groups_id, datetime, url_groups, size
+                          FROM groups JOIN subscriber USING(groups_id)
+                       """        
             self.connect_db.cursor.execute(request)
             return self.connect_db.cursor.fetchall()
 
         except Exception as error: 
-            return (f"{error}")
+            return (f"{error}1111111111")
 #################################################################################################
 
 class VkHandler(AbstractCannel):
@@ -120,10 +114,17 @@ class VkHandler(AbstractCannel):
         It leaves the part that will be used in the API request in field 'group_id'.
 
         """
-        url = str(self.one_channel_info[1])
-        print('Я в парсе 1', url)
-        self.id_group_request = url.split('/')[-1]
-        print('Я в парсе 2', self.id_group_request)
+        try:
+            url = str(self.one_channel_info[1])
+            print('Я в парсе 1', url)
+            self.id_group_request = url.split('/')[-1]
+            print('Я в парсе 2', self.id_group_request)
+        except Exception as error:
+            print(f"""The new group is not added, {error}. A group with this 'URL'
+                      probably already exists. This error  in the 'logic.py' file 
+                      in the 'pars_url' method.""")
+
+
 
     def get_size_group(self) -> tuple:
         """This method fixate number of community members."""
@@ -160,16 +161,40 @@ class Distributor:
             title = str(one_record[2])
             try:
                 objhand = self.channel.get(title)(one_record)
-            except TypeError:
-                raise MyError(f"""Unfortunately, the functionality for processing the '{title}'
-                                  channel has not yet been developed.""")
+            except TypeError as error:
+                print(f"""{error}. Unfortunately, the functionality for processing the '{title}'
+                          channel has not yet been developed.""")
 
-            objhand.pars_url()
-            objhand.get_size_group()
-            to_subscr = objhand.picking_info()
+            try:
+                objhand.pars_url()
+            except Exception as error:
+                print(f"""{error}.This error in the 'logic.py' file 
+                                  in the 'channel_handler' method,
+                                  the class 'Distributor'. Probably 
+                                  a problem with the 
+                                  'objhand.pars_url()'""")
+            try:
+                objhand.get_size_group()
+            except Exception as error:
+                print(f"""{error}.This error in the 'logic.py' file 
+                                  in the 'channel_handler' method,
+                                  the class 'Distributor'. Probably 
+                                  a problem with the 
+                                  'objhand.get_size_group()'""")
+            try:
+                to_subscr = objhand.picking_info()
+            except Exception as error:
+                print(f"""{error}.This error in the 'logic.py' file 
+                                  in the 'channel_handler' method,
+                                  the class 'Distributor'. Probably 
+                                  a problem with the 
+                                  to_subscr = objhand.picking_info()'""")
 
             try:
                 RequestsDb().write_to_subscribe(to_subscr)
             except Exception as error:
                 print(f"""{error}.This error in the 'logic.py' file 
-                                  in the 'channel_handler' method, the class 'Distributor'.""")
+                                  in the 'channel_handler' method,
+                                  the class 'Distributor'. Probably 
+                                  a problem with the 
+                                  'RequestsDb().write_to_subscribe(to_subscr)'""")
