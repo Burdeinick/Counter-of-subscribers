@@ -60,7 +60,8 @@ def add_chanal():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{error}.")
+        print(f"""{error}. This error in the 'preparing_db.py' file 
+                           in the 'add_chanal' method.""")
 
 def add_groups():
     """This method fills in the 'groups' table by default. """

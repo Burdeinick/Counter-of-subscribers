@@ -15,7 +15,8 @@ def drop_channal():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{error}.")
+        print(f"""{error}. This error in the 'drop_tables.py' file 
+                            in the 'drop_channal' method.""")
 
 def drop_groups():
     """Request to drop the 'groups' table."""
@@ -25,7 +26,8 @@ def drop_groups():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{error}.")
+        print(f"""{error}. This error in the 'drop_tables.py' file 
+                            in the 'drop_groups' method.""")
 
 def drop_subscriber():
     """Request to drop the 'subscriber' table."""
@@ -35,7 +37,8 @@ def drop_subscriber():
             connect_db.execute(request)
 
     except sqlite3.Error as error: 
-        print(f"{error}.")
+        print(f"""{error}. This error in the 'drop_tables.py' file 
+                            in the 'drop_subscriber' method.""")
 
 
 def main():
