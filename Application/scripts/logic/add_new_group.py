@@ -30,8 +30,8 @@ class AddGroup:
         except KeyError:
             return True
 
-    def check_status(self):
-        """ """
+    def enter_new_group(self):
+        """This method performs user input of a new group."""
         while True:
             inp_url_group = input("Please enter the 'URL' of the 'VK' group: ")
             last_part = self.last_part_url(inp_url_group)
@@ -47,8 +47,8 @@ class AddGroup:
 
 
 def main():
-    a = AddGroup()
-    b = a.check_status()
+    add = AddGroup()
+    check = add.enter_new_group()
 
 
 main()
