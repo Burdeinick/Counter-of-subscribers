@@ -58,6 +58,7 @@ class RequestsDb:
                        """        
             self.connect_db.conn.execute(request)
             self.connect_db.conn.commit()
+
         except Exception as error:
             print("""{error}. This error in the 'logic.py' file 
                               in the 'write_to_subscribe' method, the class RequestsDb.""")
@@ -82,7 +83,6 @@ class RequestsDb:
 
 
 #################################################################################################
-# УДАЛИТЬ ПЕРЕД РЕЛИЗОМ!
 
     def TESTOVIY_ZAPROS(self):
         try:
@@ -93,7 +93,7 @@ class RequestsDb:
             return self.connect_db.cursor.fetchall()
 
         except Exception as error: 
-            return (f"{error}1111111111")
+            return (f"{error}")
 #################################################################################################
 
 class VkHandler(AbstractCannel):
@@ -116,9 +116,8 @@ class VkHandler(AbstractCannel):
         """
         try:
             url = str(self.one_channel_info[1])
-            print('Я в парсе 1', url)
             self.id_group_request = url.split('/')[-1]
-            print('Я в парсе 2', self.id_group_request)
+            print('Я в парсе', self.id_group_request)
         except Exception as error:
             print(f"""The new group is not added, {error}. A group with this 'URL'
                       probably already exists. This error  in the 'logic.py' file 

@@ -3,7 +3,6 @@ import requests
 import sys
 sys.path.insert(0, 'Application')
 from scripts.logic.logic import ConnectionDB
-from scripts.logic.logic import MyError
 from scripts.logic.logic import RequestsDb
 
 
@@ -37,7 +36,7 @@ class AddGroup:
             last_part = self.last_part_url(inp_url_group)
             pars_gr = self.request_id_group(str(last_part))
             if pars_gr:
-                resp_add_new_gr = self.request_db.add_new_group(inp_url_group)
+                resp_add_new_gr = self.request_db.add_new_group(last_part)
                 if resp_add_new_gr:
                     print('The new group was added successfully.')
                     break
