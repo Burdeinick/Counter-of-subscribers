@@ -1,10 +1,25 @@
-import sqlite3
 import sys
+import sqlite3
+import logging
 sys.path.insert(0, 'Application')
 from scripts.logic.logic import ConnectionDB
 
 
 connect_db = ConnectionDB().conn
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+
+
+def setup_logger(name, log_file, level=logging.ERROR):
+    """The logger file 'logic.py'"""
+    handler = logging.FileHandler(log_file)        
+    handler.setFormatter(formatter)
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+    return logger
+
+
+super_logger = setup_logger('logger', 'Application/logger/logfile_preparing.log')
 
 
 def foreign_keys_on():
@@ -14,9 +29,8 @@ def foreign_keys_on():
             request = """PRAGMA foreign_keys=on"""
             connect_db.execute(request)
 
-    except sqlite3.Error as error: 
-        print(f"""{error}. This error in the 'preparing_db.py' file 
-                           in the 'foreign_keys_on' method.""")
+    except sqlite3.Error:
+        super_logger.error('Error', exc_info=True)
 
 
 def create_channel():
@@ -29,9 +43,8 @@ def create_channel():
                         )"""
             connect_db.execute(request)
 
-    except sqlite3.Error as error: 
-        print(f"""{error}. This error in the 'preparing_db.py' file 
-                           in the 'create_channel' method.""")
+    except sqlite3.Error:
+        super_logger.error('Error', exc_info=True)
 
 def create_groups():
     """This method creates the 'groups' table."""
@@ -46,9 +59,8 @@ def create_groups():
                          )"""
             connect_db.execute(request)
 
-    except sqlite3.Error as error: 
-        print(f"""{error}. This error in the 'preparing_db.py' file 
-                           in the 'create_groups' method.""")
+    except sqlite3.Error:
+        super_logger.error('Error', exc_info=True)
 
 def add_chanal():
     """This method fills in the 'channel' table."""
@@ -59,9 +71,8 @@ def add_chanal():
                       """
             connect_db.execute(request)
 
-    except sqlite3.Error as error: 
-        print(f"""{error}. This error in the 'preparing_db.py' file 
-                           in the 'add_chanal' method.""")
+    except sqlite3.Error:
+        super_logger.error('Error', exc_info=True)
 
 def add_groups():
     """This method fills in the 'groups' table by default. """
@@ -79,9 +90,8 @@ def add_groups():
                       """
             connect_db.execute(request)
 
-    except sqlite3.Error as error: 
-        print(f"""{error}. This error in the 'preparing_db.py' file 
-                           in the 'add_groups' method.""")
+    except sqlite3.Error:
+        super_logger.error('Error', exc_info=True)
 
 def create_subscriber():
     """This method creates a table that the script will fill in once a day."""
@@ -96,22 +106,17 @@ def create_subscriber():
                          )"""
             connect_db.execute(request)
 
-    except sqlite3.Error as error: 
-         print(f"""{error}. This error in the 'preparing_db.py' file 
-                            in the 'create_subscriber' method.""")
+    except sqlite3.Error:
+        super_logger.error('Error', exc_info=True)
 
 
 def main():
-    try:
-        foreign_keys_on()
-        create_channel()
-        create_groups()
-        add_chanal()
-        add_groups()
-        create_subscriber()
-        print("DB is prepared.")
+    foreign_keys_on()
+    create_channel()
+    create_groups()
+    add_chanal()
+    add_groups()
+    create_subscriber()
 
-    except Exception as error:
-       print(f"DB is not prepared, {error}.")  
-
-main()
+if __name__ == "__main__":
+    main()

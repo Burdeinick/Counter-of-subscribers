@@ -9,7 +9,7 @@ def job():
     select_hand = Distributor(req_grop)
     final_action = select_hand.channel_handler()
 
-    for one_tup in RequestsDb().TESTOVIY_ZAPROS():
+    for one_tup in RequestsDb().testoviy_zapros():
         print(one_tup)
         
 
@@ -18,8 +18,6 @@ def main():
     while True:
         schedule.run_pending()
         time.sleep(1)
-
-main()
 
 
 if __name__ == "__main__":

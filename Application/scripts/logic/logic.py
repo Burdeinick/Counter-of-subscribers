@@ -1,10 +1,9 @@
+import time
 import json
 import sqlite3
 import logging
 import requests
-import time 
 from scripts.logic.abstract_for_channel import AbstractCannel
-
 
 
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
@@ -14,15 +13,13 @@ def setup_logger(name, log_file, level=logging.ERROR):
     """The logger file 'logic.py'"""
     handler = logging.FileHandler(log_file)        
     handler.setFormatter(formatter)
-
     logger = logging.getLogger(name)
     logger.setLevel(level)
     logger.addHandler(handler)
-
     return logger
 
 
-super_logger = setup_logger('logger', 'logfile.log')
+super_logger = setup_logger('logger', 'Application/logger/logfile_logic.log')
 
 
 class ConnectionDB:
@@ -69,7 +66,6 @@ class RequestsDb:
         """This request fills the database with the collected information."""
         db_gr_id = info[0]
         size_group = info[1]
-    
         try:
             request = f"""INSERT INTO subscriber(groups_id, size, datetime)
                           VALUES({db_gr_id}, {size_group}, CURRENT_DATE)
@@ -96,10 +92,9 @@ class RequestsDb:
             super_logger.error('Error', exc_info=True)
             return False
 
-
 #################################################################################################
 
-    def TESTOVIY_ZAPROS(self):
+    def testoviy_zapros(self):
         try:
             request = f"""SELECT subscriber_id, groups_id, datetime, url_groups, size
                           FROM groups JOIN subscriber USING(groups_id)
@@ -178,10 +173,12 @@ class Distributor:
                 objhand.pars_url()
             except Exception:
                 super_logger.error('Error', exc_info=True)
+
             try:
                 objhand.get_size_group()
             except Exception:
                 super_logger.error('Error', exc_info=True)
+
             try:
                 to_subscr = objhand.picking_info()
             except Exception:
