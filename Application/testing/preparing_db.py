@@ -28,8 +28,7 @@ def foreign_keys_on():
         with connect_db:
             request = """PRAGMA foreign_keys=on"""
             connect_db.execute(request)
-
-    except sqlite3.Error:
+    except Exception:
         super_logger.error('Error', exc_info=True)
 
 
@@ -42,8 +41,7 @@ def create_channel():
                             title TEXT NOT NULL
                         )"""
             connect_db.execute(request)
-
-    except sqlite3.Error:
+    except Exception:
         super_logger.error('Error', exc_info=True)
 
 def create_groups():
@@ -58,8 +56,7 @@ def create_groups():
                          UNIQUE(url_groups)
                          )"""
             connect_db.execute(request)
-
-    except sqlite3.Error:
+    except Exception:
         super_logger.error('Error', exc_info=True)
 
 def add_chanal():
@@ -70,8 +67,7 @@ def add_chanal():
                          VALUES('VK')
                       """
             connect_db.execute(request)
-
-    except sqlite3.Error:
+    except Exception:
         super_logger.error('Error', exc_info=True)
 
 def add_groups():
@@ -79,18 +75,17 @@ def add_groups():
     try:
         with connect_db:
             request = """INSERT INTO groups(channel_id, url_groups)
-                         VALUES(1, 'vk.com/rambler'),
-                               (1, 'vk.com/ramblermail'),
-                               (1, 'vk.com/horoscopesrambler'),
-                               (1, 'vk.com/championat'),
-                               (1, 'vk.com/championat.auto'),
-                               (1, 'vk.com/championat_cybersport'),
-                               (1, 'vk.com/livejournal'),
-                               (1, 'vk.com/afisha')
+                         VALUES(1, 'rambler'),
+                               (1, 'ramblermail'),
+                               (1, 'horoscopesrambler'),
+                               (1, 'championat'),
+                               (1, 'championat.auto'),
+                               (1, 'championat_cybersport'),
+                               (1, 'livejournal'),
+                               (1, 'afisha')
                       """
             connect_db.execute(request)
-
-    except sqlite3.Error:
+    except Exception:
         super_logger.error('Error', exc_info=True)
 
 def create_subscriber():
@@ -105,8 +100,7 @@ def create_subscriber():
                             FOREIGN KEY (groups_id) REFERENCES groups(groups_id) ON DELETE SET NULL
                          )"""
             connect_db.execute(request)
-
-    except sqlite3.Error:
+    except Exception:
         super_logger.error('Error', exc_info=True)
 
 

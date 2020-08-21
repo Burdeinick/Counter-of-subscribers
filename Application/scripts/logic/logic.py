@@ -93,7 +93,6 @@ class RequestsDb:
             return False
 
 #################################################################################################
-
     def testoviy_zapros(self):
         try:
             request = f"""SELECT subscriber_id, groups_id, datetime, url_groups, size
@@ -107,6 +106,7 @@ class RequestsDb:
             return (f"{error}. I couldn't get the data.")
 #################################################################################################
 
+
 class VkHandler(AbstractCannel):
     """This class can handle 'VK' groups. 
     By API request it can to get number of users.
@@ -116,22 +116,10 @@ class VkHandler(AbstractCannel):
         self.connect = ConnectionDB()
         self.one_channel_info = one_channel_info
         self.db_gr_id = int(self.one_channel_info[0])
-        self.id_group_request = None
+        self.id_group_request = str(one_channel_info[1])
         self.size_group = None
         self.vk_token = self.connect.get_config_db()[1]
         
-    def pars_url(self):
-        """The method splitting string URL.
-        It leaves the part that will be used in the API request in field 'group_id'.
-
-        """
-        try:
-            url = str(self.one_channel_info[1])
-            self.id_group_request = url.split('/')[-1]
-            print('Я в парсе', self.id_group_request)
-        except Exception:
-            super_logger.error('Error', exc_info=True)
-
 
     def get_size_group(self) -> tuple:
         """This method fixate number of community members."""
@@ -166,11 +154,6 @@ class Distributor:
             title = str(one_record[2])
             try:
                 objhand = self.channel.get(title)(one_record)
-            except Exception:
-                super_logger.error('Error', exc_info=True)
-
-            try:
-                objhand.pars_url()
             except Exception:
                 super_logger.error('Error', exc_info=True)
 
