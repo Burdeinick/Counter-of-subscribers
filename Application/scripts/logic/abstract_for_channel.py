@@ -11,8 +11,8 @@ class AbstractCannel(ABC):
     @abstractmethod
     def picking_info(self) -> tuple:
         """This method should return a tuple that
-        contains the channel id in the DB and the number of subscribers of the group.
-        
+        contains the channel id in the DB and the number
+        of subscribers of the group.
+
         """
         pass
-

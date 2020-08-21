@@ -11,7 +11,7 @@ formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 
 def setup_logger(name, log_file, level=logging.ERROR):
     """The logger file 'logic.py'"""
-    handler = logging.FileHandler(log_file)        
+    handler = logging.FileHandler(log_file)
     handler.setFormatter(formatter)
     logger = logging.getLogger(name)
     logger.setLevel(level)
@@ -29,9 +29,9 @@ class ConnectionDB:
         self.conn = sqlite3.connect(self.dbname)
         self.cursor = self.conn.cursor()
 
-    def get_config_db(self)-> tuple:
+    def get_config_db(self) -> tuple:
         """The method getting informations of configuration file."""
-        with open ('Application/config.json') as config:
+        with open('Application/config.json') as config:
             json_str = config.read()
             json_str = json.loads(json_str)
         dbname = str(json_str['Data_Base']['dbname'])
@@ -42,12 +42,12 @@ class ConnectionDB:
 class RequestsDb:
     """Class for requests DB.
     The query syntax is intended for working with the 'Sqlite' database.
-    
+
     """
     def __init__(self):
         self.connect_db = ConnectionDB()
 
-    def get_groups(self)-> list:
+    def get_groups(self) -> list:
         """This request returns all the groups to get information from.
         For example: [(1, 'vk.com/rambler', 'VK'), ...].
 
@@ -55,13 +55,13 @@ class RequestsDb:
         try:
             request = """SELECT groups_id, url_groups, title
                          FROM channel JOIN groups USING(channel_id)
-                      """        
+                      """
             self.connect_db.cursor.execute(request)
             return self.connect_db.cursor.fetchall()
 
         except Exception:
             super_logger.error('Error', exc_info=True)
-    
+
     def write_to_subscribe(self, info: tuple):
         """This request fills the database with the collected information."""
         db_gr_id = info[0]
@@ -69,21 +69,23 @@ class RequestsDb:
         try:
             request = f"""INSERT INTO subscriber(groups_id, size, datetime)
                           VALUES({db_gr_id}, {size_group}, CURRENT_DATE)
-                       """        
+                       """
             self.connect_db.conn.execute(request)
             self.connect_db.conn.commit()
 
         except Exception:
             super_logger.error('Error', exc_info=True)
 
-    def add_new_group(self, new_group:str) -> bool:
+    def add_new_group(self, new_group: str) -> bool:
         """This method makes a query in the database by adding a new group.
-           'channel_id' = 1 because the channel('VK') in the table 'channel' = 1
+           'channel_id' = 1 because the channel('VK') in
+           the table 'channel' = 1.
+
         """
         try:
             request = f"""INSERT INTO groups(url_groups, channel_id)
                           VALUES('{new_group}', 1)
-                       """        
+                       """
             self.connect_db.conn.execute(request)
             self.connect_db.conn.commit()
             return True
@@ -95,20 +97,21 @@ class RequestsDb:
 #################################################################################################
     def testoviy_zapros(self):
         try:
-            request = f"""SELECT subscriber_id, groups_id, datetime, url_groups, size
+            request = f"""SELECT subscriber_id, groups_id,
+                                 datetime, url_groups, size
                           FROM groups JOIN subscriber USING(groups_id)
-                       """        
+                       """
             self.connect_db.cursor.execute(request)
             return self.connect_db.cursor.fetchall()
 
-        except Exception as error: 
+        except Exception as error:
             super_logger.error('Error', exc_info=True)
             return (f"{error}. I couldn't get the data.")
 #################################################################################################
 
 
 class VkHandler(AbstractCannel):
-    """This class can handle 'VK' groups. 
+    """This class can handle 'VK' groups.
     By API request it can to get number of users.
 
     """
@@ -119,7 +122,6 @@ class VkHandler(AbstractCannel):
         self.id_group_request = str(one_channel_info[1])
         self.size_group = None
         self.vk_token = self.connect.get_config_db()[1]
-        
 
     def get_size_group(self) -> tuple:
         """This method fixate number of community members."""
@@ -133,7 +135,8 @@ class VkHandler(AbstractCannel):
 
     def picking_info(self) -> tuple:
         """This method returns a tuple that
-        contains the channel id in the DB and the number of subscribers of the group.
+        contains the channel id in the DB and the number of
+        subscribers of the group.
 
         """
         return (self.db_gr_id, self.size_group)

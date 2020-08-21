@@ -7,7 +7,10 @@ from scripts.logic.logic import RequestsDb
 
 
 class AddGroup:
-    """This class allows you to add a new group for further processing and polling."""
+    """This class allows you to add a new group for
+    further processing and polling.
+
+    """
     def __init__(self):
         self.connect = ConnectionDB()
         self.request_db = RequestsDb()
@@ -16,7 +19,6 @@ class AddGroup:
     def last_part_url(self, url: str) -> str:
         """This method leaves only "group_id" for checking."""
         return str(str(url).split('/')[-1])
-
 
     def request_id_group(self, url_group: str) -> bool:
         """This method checks the group with a query."""
