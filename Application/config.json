@@ -1,6 +1,6 @@
 {
-    "Data_Base": {"dbname": "subscribers.db"},
+    "data_Base": {"dbname": "subscribers.db"},
     "channel": {"VK": 
                 {"token": "d470286e91947afdc1208b5a540543fae4c2e1a784464993bb643ba74a95ac5a51788168454246d8e28ec"}},
-    "username": "alexandr"
+    "schedule": "12:00"
 }

@@ -34,9 +34,10 @@ class ConnectionDB:
         with open('Application/config.json') as config:
             json_str = config.read()
             json_str = json.loads(json_str)
-        dbname = str(json_str['Data_Base']['dbname'])
+        dbname = str(json_str['data_Base']['dbname'])
         vktok = str(json_str['channel']['VK']['token'])
-        return (dbname, vktok)
+        sched = str(json_str['schedule'])
+        return (dbname, vktok, sched)
 
 
 class RequestsDb:
