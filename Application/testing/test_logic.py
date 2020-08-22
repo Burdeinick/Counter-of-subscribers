@@ -4,7 +4,6 @@ sys.path.insert(0, 'Application')
 from scripts.logic.add_new_group import AddGroup
 
 
-
 class TestAddGroup(unittest.TestCase):
     """The class test some methods."""
     def setUp(self):
@@ -12,7 +11,7 @@ class TestAddGroup(unittest.TestCase):
 
     def test_last_part_url(self):
         """Testing the 'last_part_url' method."""
-        x = (('https://vk.com/animalplanetrussia', 'animalplanetrussia'), 
+        x = (('https://vk.com/animalplanetrussia', 'animalplanetrussia'),
              ('zal_borcov', 'zal_borcov'),
              (12345, '12345'),
              ('', ''))

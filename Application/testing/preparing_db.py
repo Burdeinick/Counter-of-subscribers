@@ -11,7 +11,7 @@ formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 
 def setup_logger(name, log_file, level=logging.ERROR):
     """The logger file 'logic.py'"""
-    handler = logging.FileHandler(log_file)        
+    handler = logging.FileHandler(log_file)
     handler.setFormatter(formatter)
     logger = logging.getLogger(name)
     logger.setLevel(level)
@@ -19,7 +19,8 @@ def setup_logger(name, log_file, level=logging.ERROR):
     return logger
 
 
-super_logger = setup_logger('logger', 'Application/logger/logfile_preparing.log')
+super_logger = setup_logger('logger',
+                            'Application/logger/logfile_preparing.log')
 
 
 def foreign_keys_on():
@@ -37,12 +38,13 @@ def create_channel():
     try:
         with connect_db:
             request = """CREATE TABLE IF NOT EXISTS channel(
-                            channel_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                            title TEXT NOT NULL
+                         channel_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                         title TEXT NOT NULL
                         )"""
             connect_db.execute(request)
     except Exception:
         super_logger.error('Error', exc_info=True)
+
 
 def create_groups():
     """This method creates the 'groups' table."""
@@ -52,12 +54,15 @@ def create_groups():
                          groups_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                          url_groups TEXT NOT NULL,
                          channel_id INTEGER NOT NULL,
-                         FOREIGN KEY (channel_id) REFERENCES channel(channel_id) ON DELETE CASCADE,
+                         FOREIGN KEY (channel_id)
+                         REFERENCES channel(channel_id)
+                         ON DELETE CASCADE,
                          UNIQUE(url_groups)
                          )"""
             connect_db.execute(request)
     except Exception:
         super_logger.error('Error', exc_info=True)
+
 
 def add_chanal():
     """This method fills in the 'channel' table."""
@@ -69,6 +74,7 @@ def add_chanal():
             connect_db.execute(request)
     except Exception:
         super_logger.error('Error', exc_info=True)
+
 
 def add_groups():
     """This method fills in the 'groups' table by default. """
@@ -88,16 +94,19 @@ def add_groups():
     except Exception:
         super_logger.error('Error', exc_info=True)
 
+
 def create_subscriber():
     """This method creates a table that the script will fill in once a day."""
     try:
         with connect_db:
-            request = """CREATE TABLE IF NOT EXISTS subscriber( 
-                            subscriber_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            request = """CREATE TABLE IF NOT EXISTS subscriber(
+                            subscriber_id INTEGER PRIMARY KEY
+                            AUTOINCREMENT NOT NULL,
                             datetime TEXT NOT NULL,
                             size INTEGER NOT NULL,
                             groups_id INTEGER NOT NULL,
-                            FOREIGN KEY (groups_id) REFERENCES groups(groups_id) ON DELETE SET NULL
+                            FOREIGN KEY (groups_id) REFERENCES
+                            groups(groups_id) ON DELETE SET NULL
                          )"""
             connect_db.execute(request)
     except Exception:
@@ -111,6 +120,7 @@ def main():
     add_chanal()
     add_groups()
     create_subscriber()
+
 
 if __name__ == "__main__":
     main()

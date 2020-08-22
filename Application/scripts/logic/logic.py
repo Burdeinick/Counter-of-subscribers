@@ -94,7 +94,6 @@ class RequestsDb:
             super_logger.error('Error', exc_info=True)
             return False
 
-#################################################################################################
     def testoviy_zapros(self):
         try:
             request = f"""SELECT subscriber_id, groups_id,
@@ -107,7 +106,6 @@ class RequestsDb:
         except Exception as error:
             super_logger.error('Error', exc_info=True)
             return (f"{error}. I couldn't get the data.")
-#################################################################################################
 
 
 class VkHandler(AbstractCannel):

@@ -11,7 +11,7 @@ formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 
 def setup_logger(name, log_file, level=logging.ERROR):
     """The logger file 'logic.py'"""
-    handler = logging.FileHandler(log_file)        
+    handler = logging.FileHandler(log_file)
     handler.setFormatter(formatter)
     logger = logging.getLogger(name)
     logger.setLevel(level)
@@ -19,7 +19,8 @@ def setup_logger(name, log_file, level=logging.ERROR):
     return logger
 
 
-super_logger = setup_logger('drop_tables_logger', 'Application/logger/logfile_drop_tables.log')
+super_logger = setup_logger('drop_tables_logger',
+                            'Application/logger/logfile_drop_tables.log')
 
 
 def drop_channal():
@@ -32,6 +33,7 @@ def drop_channal():
     except Exception:
         super_logger.error('Error', exc_info=True)
 
+
 def drop_groups():
     """Request to drop the 'groups' table."""
     try:
@@ -41,6 +43,7 @@ def drop_groups():
 
     except Exception:
         super_logger.error('Error', exc_info=True)
+
 
 def drop_subscriber():
     """Request to drop the 'subscriber' table."""
