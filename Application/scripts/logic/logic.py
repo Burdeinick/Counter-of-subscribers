@@ -95,19 +95,6 @@ class RequestsDb:
             super_logger.error('Error', exc_info=True)
             return False
 
-    def testoviy_zapros(self):
-        try:
-            request = f"""SELECT subscriber_id, groups_id,
-                                 datetime, url_groups, size
-                          FROM groups JOIN subscriber USING(groups_id)
-                       """
-            self.connect_db.cursor.execute(request)
-            return self.connect_db.cursor.fetchall()
-
-        except Exception as error:
-            super_logger.error('Error', exc_info=True)
-            return (f"{error}. I couldn't get the data.")
-
 
 class VkHandler(AbstractCannel):
     """This class can handle 'VK' groups.
