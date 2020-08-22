@@ -129,6 +129,7 @@ class VkHandler(AbstractCannel):
         try:
             time.sleep(1)
             self.size_group = response.json()['response']['count']
+
         except Exception:
             super_logger.error('Error', exc_info=True)
 
