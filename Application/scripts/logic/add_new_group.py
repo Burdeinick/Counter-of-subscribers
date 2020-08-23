@@ -25,11 +25,9 @@ class AddGroup:
 
         URL = f"https://api.vk.com/method/groups.getMembers?group_id={url_group}&v=5.122&offset=100&count=10&access_token={self.vk_token}"
         response = requests.get(URL)
-        try:
-            if response.json()['error']:
-                return False
-        except KeyError:
+        if 'error' not in response.json():
             return True
+        return False
 
 
     def enter_new_group(self):
@@ -46,7 +44,7 @@ class AddGroup:
                 print('Opps! This group already exists!')
                 continue
             else:
-                print('Opps! There is something wrong.')
+                print('Opps! There is something wrong!')
                 continue
 
 
