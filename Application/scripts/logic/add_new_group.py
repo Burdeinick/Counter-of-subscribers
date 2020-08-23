@@ -18,7 +18,7 @@ class AddGroup:
 
     def last_part_url(self, url: str) -> str:
         """This method leaves only "group_id" for checking."""
-        return str(str(url).split('/')[-1])
+        return str(url).split('/')[-1]
 
     def request_id_group(self, url_group: str) -> bool:
         """This method checks the group with a query."""
