@@ -92,7 +92,6 @@ class RequestsDb:
             return True
 
         except Exception:
-            super_logger.error('Error', exc_info=True)
             return False
 
 

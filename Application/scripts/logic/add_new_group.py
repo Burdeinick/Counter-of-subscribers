@@ -31,6 +31,7 @@ class AddGroup:
         except KeyError:
             return True
 
+
     def enter_new_group(self):
         """This method performs user input of a new group."""
         while True:
@@ -42,6 +43,8 @@ class AddGroup:
                 if resp_add_new_gr:
                     print('The new group was added successfully.')
                     break
+                print('Opps! This group already exists!')
+                continue
             else:
                 print('Opps! There is something wrong.')
                 continue
