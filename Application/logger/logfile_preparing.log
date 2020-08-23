@@ -1,5 +1,0 @@
-2020-08-23 11:56:44,693 ERROR Error
-Traceback (most recent call last):
-  File "Application/testing/preparing_db.py", line 93, in add_groups
-    connect_db.execute(request)
-sqlite3.IntegrityError: UNIQUE constraint failed: groups.url_groups
