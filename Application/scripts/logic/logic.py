@@ -1,25 +1,12 @@
 import time
 import json
 import sqlite3
-import logging
 import requests
 from scripts.logic.abstract_for_channel import AbstractCannel
+from logger.log import MyLogging
 
 
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-
-
-def setup_logger(name, log_file, level=logging.ERROR):
-    """The logger file 'logic.py'"""
-    handler = logging.FileHandler(log_file)
-    handler.setFormatter(formatter)
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)
-    return logger
-
-
-super_logger = setup_logger('logger', 'Application/logger/logfile_logic.log')
+super_logger =  MyLogging().setup_logger('logic_logger', 'Application/logger/logfile_logic.log')
 
 
 class ConnectionDB:

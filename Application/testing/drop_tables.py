@@ -3,24 +3,12 @@ import logging
 import sqlite3
 sys.path.insert(0, 'Application')
 from scripts.logic.logic import ConnectionDB
+from logger.log import MyLogging
 
 
 connect_db = ConnectionDB().conn
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-
-
-def setup_logger(name, log_file, level=logging.ERROR):
-    """The logger file 'logic.py'"""
-    handler = logging.FileHandler(log_file)
-    handler.setFormatter(formatter)
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)
-    return logger
-
-
-super_logger = setup_logger('drop_tables_logger',
-                            'Application/logger/logfile_drop_tables.log')
+super_logger = MyLogging().setup_logger('drop_tables_logger',
+                                        'Application/logger/logfile_drop_tables.log')
 
 
 def drop_channal():
