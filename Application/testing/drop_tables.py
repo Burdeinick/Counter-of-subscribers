@@ -11,7 +11,7 @@ super_logger = MyLogging().setup_logger('drop_tables_logger',
 
 
 class DropTableDb:
-    """ """
+    """The class for deleting tables."""
     def __init__(self):
         self.connect_db = ConnectionDB().conn
 

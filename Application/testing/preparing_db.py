@@ -10,7 +10,7 @@ super_logger = MyLogging().setup_logger('preparing_db_logger',
 
 
 class PreparDb:
-    """ """
+    """The class for creating tables in a database."""
     def __init__(self):
         self.connect_db = ConnectionDB().conn
 
