@@ -6,48 +6,54 @@ from scripts.logic.logic import ConnectionDB
 from logger.log import MyLogging
 
 
-connect_db = ConnectionDB().conn
 super_logger = MyLogging().setup_logger('drop_tables_logger',
                                         'Application/logger/logfile_drop_tables.log')
 
 
-def drop_channal():
-    """Request to drop the 'channel' table."""
-    try:
-        with connect_db:
-            request = """DROP TABLE IF EXISTS channal"""
-            connect_db.execute(request)
+class DropTableDb:
+    """ """
+    def __init__(self):
+        self.connect_db = ConnectionDB().conn
 
-    except Exception:
-        super_logger.error('Error', exc_info=True)
+    def drop_channal(self):
+        """Request to drop the 'channel' table."""
+        try:
+            with self.connect_db:
+                request = """DROP TABLE IF EXISTS channal"""
+                self.connect_db.execute(request)
+                self.connect_db.commit()
 
+        except Exception:
+            super_logger.error('Error', exc_info=True)
 
-def drop_groups():
-    """Request to drop the 'groups' table."""
-    try:
-        with connect_db:
-            request = """DROP TABLE IF EXISTS groups"""
-            connect_db.execute(request)
+    def drop_groups(self):
+        """Request to drop the 'groups' table."""
+        try:
+            with self.connect_db:
+                request = """DROP TABLE IF EXISTS groups"""
+                self.connect_db.execute(request)
+                self.connect_db.commit()
 
-    except Exception:
-        super_logger.error('Error', exc_info=True)
+        except Exception:
+            super_logger.error('Error', exc_info=True)
 
+    def drop_subscriber(self):
+        """Request to drop the 'subscriber' table."""
+        try:
+            with self.connect_db:
+                request = """DROP TABLE IF EXISTS subscriber"""
+                self.connect_db.execute(request)
+                self.connect_db.commit()
 
-def drop_subscriber():
-    """Request to drop the 'subscriber' table."""
-    try:
-        with connect_db:
-            request = """DROP TABLE IF EXISTS subscriber"""
-            connect_db.execute(request)
-
-    except Exception:
-        super_logger.error('Error', exc_info=True)
+        except Exception:
+            super_logger.error('Error', exc_info=True)
 
 
 def main():
-    drop_channal()
-    drop_groups()
-    drop_subscriber()
+    drop_tab = DropTableDb()
+    drop_tab.drop_channal()
+    drop_tab.drop_groups()
+    drop_tab.drop_subscriber()
 
 
 if __name__ == "__main__":

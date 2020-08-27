@@ -6,7 +6,8 @@ from scripts.logic.abstract_for_channel import AbstractCannel
 from logger.log import MyLogging
 
 
-super_logger =  MyLogging().setup_logger('logic_logger', 'Application/logger/logfile_logic.log')
+super_logger =  MyLogging().setup_logger('logic_logger',
+                                         'Application/logger/logfile_logic.log')
 
 
 class ConnectionDB:
@@ -33,7 +34,8 @@ class RequestsDb:
 
     """
     def __init__(self):
-        self.connect_db = ConnectionDB()
+        self.conn = ConnectionDB().conn
+        self.cursor = ConnectionDB().cursor
 
     def get_groups(self) -> list:
         """This request returns all the groups to get information from.
@@ -44,8 +46,8 @@ class RequestsDb:
             request = """SELECT groups_id, url_groups, title
                          FROM channel JOIN groups USING(channel_id)
                       """
-            self.connect_db.cursor.execute(request)
-            return self.connect_db.cursor.fetchall()
+            self.cursor.execute(request)
+            return self.cursor.fetchall()
 
         except Exception:
             super_logger.error('Error', exc_info=True)
@@ -58,8 +60,8 @@ class RequestsDb:
             request = f"""INSERT INTO subscriber(groups_id, size, datetime)
                           VALUES({db_gr_id}, {size_group}, CURRENT_DATE)
                        """
-            self.connect_db.conn.execute(request)
-            self.connect_db.conn.commit()
+            self.conn.execute(request)
+            self.conn.commit()
 
         except Exception:
             super_logger.error('Error', exc_info=True)
@@ -74,8 +76,8 @@ class RequestsDb:
             request = f"""INSERT INTO groups(url_groups, channel_id)
                           VALUES('{new_group}', 1)
                        """
-            self.connect_db.conn.execute(request)
-            self.connect_db.conn.commit()
+            self.conn.execute(request)
+            self.conn.commit()
             return True
 
         except Exception:
